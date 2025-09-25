@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -6,21 +6,21 @@ using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("�̵� ����")]
+    [Header("이동 설정")]
     public float walfSpeed = 3.0f;
     public float runSpeed = 6.0f;
     public float rotationSpeed = 10.0f;
 
-    [Header("���� ����")]
+    [Header("점프 설정")]
     public float jumpHeight = 2.0f;
     public float gravity = -9.81f;
     public float landingDuration = 0.3f;
 
-    [Header("���� ����")]
+    [Header("공격 설정")]
     public float attackDueation = 0.8f;
     public bool canMoveWhileAttacking = false;
 
-    [Header("Ŀ����Ʈ")]
+    [Header("커포넌트")]
     public Animator animator;
 
     private CharacterController controller;
@@ -60,12 +60,20 @@ public class PlayerController : MonoBehaviour
 
         if (isGrounded && velocity.y < 0)
         {
-            velocity.y = -2.0f;
-            if (!wasGrounded && animator != null)
+            // 땅에 막 닿았는지(!wasGrounded)를 먼저 확인
+            if (!wasGrounded)
             {
-                isLanding = true;
-                landingTimer = landingDuration;
+                // ⭐ 핵심: 낙하 속도가 충분히 빨랐을 때만 착지 상태로 변경
+                // -3.0f는 임계값이며, 필요에 따라 조절할 수 있습니다.
+                if (velocity.y < -3.0f)
+                {
+                    isLanding = true;
+                    landingTimer = landingDuration;
+                }
             }
+
+            // 땅에 붙어있도록 속도를 초기화하는 부분은 항상 실행
+            velocity.y = -2.0f;
         }
     }
     void HandleMovent()
@@ -115,7 +123,7 @@ public class PlayerController : MonoBehaviour
     {
         float animatorSpeed = Mathf.Clamp01(currentSpeed / runSpeed);
         animator.SetFloat("speed", animatorSpeed);
-        animator.SetBool("speed", isGrounded);
+        animator.SetBool("isGrounded", isGrounded);
 
         bool isFalling = !isGrounded && velocity.y < -0.1f;
         animator.SetBool("isFalling", isFalling);
