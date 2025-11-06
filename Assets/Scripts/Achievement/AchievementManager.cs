@@ -36,9 +36,9 @@ public class AchievementManager : MonoBehaviour
     void Start()
     {
         ResetAllAchievements();                   //시작시에 리셋 강제로 (테스트용)
-        foreach (AchievementType type in System.Enum.GetValues(typeof(AchievementType))) 
+        foreach (AchievementType type in System.Enum.GetValues(typeof(AchievementType)))
         {
-          progressData[type] = 0;
+            progressData[type] = 0;
         }
         LoadAchievements();
         UpdateAchievementUI();
@@ -48,7 +48,7 @@ public class AchievementManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     //업적 UI 업데이트
@@ -63,7 +63,7 @@ public class AchievementManager : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        foreach(AchievementData achievement in allachievements)
+        foreach (AchievementData achievement in allachievements)
         {
             GameObject slot = Instantiate(ahievementSlotPrefab, achievementListContent);
             AchievementSlot slotScript = slot.GetComponent<AchievementSlot>();
@@ -84,21 +84,21 @@ public class AchievementManager : MonoBehaviour
             {
                 if (progressData[type] >= achievement.requiredAmount)
                 {
-                   UnlockAchievement(achievement);
+                    UnlockAchievement(achievement);
 
                 }
             }
         }
-       
+
     }
 
     void UnlockAchievement(AchievementData achievement)        //업적 달성 처리
     {
         achievement.isUnlocked = true;
-       
+
         SaveAchievements();
         UpdateAchievementUI();
-       
+
     }
 
     void ShowAchievementPopup(AchievementData ahievement)
@@ -106,7 +106,7 @@ public class AchievementManager : MonoBehaviour
         if (achievementPopupPrefab != null && popupParent != null)
         {
             GameObject popup = Instantiate(achievementPopupPrefab, popupParent);
-            
+
             Text titleText = popup.transform.Find("Title")?.GetComponent<Text>();
             Text descrText = popup.transform.Find("Description")?.GetComponent<Text>();
 
@@ -135,7 +135,7 @@ public class AchievementManager : MonoBehaviour
             PlayerPrefs.SetInt("Achihevement_" + kvp.Key, kvp.Value);
         }
 
-        foreach(AchievementData achievement in allachievements)
+        foreach (AchievementData achievement in allachievements)
         {
             PlayerPrefs.SetInt("Unlocked_" + achievement.achievementName, achievement.isUnlocked ? 1 : 0);
         }
@@ -154,9 +154,9 @@ public class AchievementManager : MonoBehaviour
         {
             achievement.isUnlocked = PlayerPrefs.GetInt("Unlocked_" + achievement.achievementName, 0) == 1;
         }
-        
-            
-        
+
+
+
     }
 
     public void ResetAllAchievements()
