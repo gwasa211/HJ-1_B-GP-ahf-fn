@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Net.Http.Headers;
 
 
 public class CityGenerator : EditorWindow                   //Unity 에디터 창을 만드는 클래스
@@ -30,11 +31,11 @@ public class CityGenerator : EditorWindow                   //Unity 에디터 창을 
         GUILayout.Space(10);
         if (GUILayout.Button("Generate City"))
         {
-
+            GenerateCity(); 
         }
         if (GUILayout.Button("Clear City"))
         {
-
+            ClearCity();
         }
     }
     private void CreateBuilding(Vector3 position, Transform parent)
@@ -71,6 +72,44 @@ public class CityGenerator : EditorWindow                   //Unity 에디터 창을 
         if (makeStatic)
         {
             road.isStatic = true;
+        }
+
+    }
+
+    private void ClearCity()
+    {
+        GameObject city = GameObject.Find("City");
+        if (city != null)
+        {
+            DestroyImmediate(city);
+        }
+    }
+    private void GenerateCity()
+    {
+        GameObject cityParent = new GameObject("City");
+
+        GameObject buildingsParent = new GameObject("Buildings");
+        buildingsParent.transform.SetParent(cityParent.transform, false);
+
+        GameObject roadsParent = new GameObject("Roads");
+        roadsParent.transform.SetParent(cityParent.transform, false);
+
+        for (int x = 0; x < gridSizeX; x++)
+        {
+            for (int z = 0; z < gridSizeZ; z++)
+            {
+                Vector3 position = new Vector3(x * buildingSpacing, 0, z * buildingSpacing);   //각 위치 계산
+
+                if (x % 2 == 0 || z % 2 == 0)
+                {
+                    CreateRoad(position, roadsParent.transform);
+                }
+                else
+                {
+                    CreateBuilding(position, buildingsParent.transform);
+                }
+            }
+
         }
 
     }
