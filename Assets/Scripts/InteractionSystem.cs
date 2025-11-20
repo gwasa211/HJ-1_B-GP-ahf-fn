@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class InteractionSystem : MonoBehaviour
 {
+
     [Header("상호 작용 설정")]
     public float interactionRange = 2.0f;                         //상호 작용 범위
     public LayerMask interactionLayerMask = 1;                   //상호 작용 할 레이어

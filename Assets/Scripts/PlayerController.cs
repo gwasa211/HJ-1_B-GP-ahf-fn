@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
+
     [Header("이동 설정")]
     public float walkSpeed = 3f;
     public float runSpeed = 6f;
