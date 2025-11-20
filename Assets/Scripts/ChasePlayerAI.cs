@@ -57,7 +57,7 @@ public class ChasePlayerAI : MonoBehaviour
         Debug.Log("Attacking player!");
     }
 
-    void OnDrawGizmosSeleted()
+private void OnDrawGizmosSelecleted()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, chaseRange);
