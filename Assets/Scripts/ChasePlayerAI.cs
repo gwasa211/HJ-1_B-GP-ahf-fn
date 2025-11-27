@@ -37,6 +37,7 @@ public class ChasePlayerAI : MonoBehaviour
         {
             Attack();
         }
+
     }
 
     void ChasePlayer()
