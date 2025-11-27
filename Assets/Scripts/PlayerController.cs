@@ -6,7 +6,6 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
 
-
     [Header("이동 설정")]
     public float walkSpeed = 3f;
     public float runSpeed = 6f;
@@ -42,6 +41,7 @@ public class PlayerController : MonoBehaviour
 
     private bool isUIMode;
 
+    public GameObject effectPos;
 
     // Start is called before the first frame update
     void Start()
@@ -60,8 +60,8 @@ public class PlayerController : MonoBehaviour
             ToggleCursorLock();
         }
 
-        
-        if(!isUIMode)
+
+        if (!isUIMode)
         {
             CheckGrounded();
             HandleLanding();
@@ -70,7 +70,7 @@ public class PlayerController : MonoBehaviour
             HandleAttack();
             UpdateAnimatior();
         }
-      
+
 
     }
 
@@ -97,6 +97,7 @@ public class PlayerController : MonoBehaviour
                 isLanding = true;
                 landingTimer = landingDuration;
                 Debug.Log("착지");
+                EffectManager.Instance.PlayEffect("착지 이펙트", transform.position);
             }
         }
     }
@@ -123,7 +124,7 @@ public class PlayerController : MonoBehaviour
                 isAttacking = false;
 
             }
-          
+
         }
         if (Input.GetKeyDown(KeyCode.Alpha1) && !isAttacking)          //공격 중이 아닐 때 키를 누르면 공격
         {
@@ -133,13 +134,14 @@ public class PlayerController : MonoBehaviour
             if (animator != null)
             {
                 animator.SetTrigger("attackTrigger");
+                EffectManager.Instance.PlayEffectWithDelay("공격 이펙트", effectPos.transform.position, Quaternion.identity, 0.5f, 1.0f);
             }
         }
     }
 
     void HandileJump()
     {
-        if(Input.GetButtonDown("Jump")&& isGrounded)
+        if (Input.GetButtonDown("Jump") && isGrounded)
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
 
@@ -148,8 +150,8 @@ public class PlayerController : MonoBehaviour
                 animator.SetTrigger("jumpTrigger");
             }
         }
-        
-        if(!isGrounded)
+
+        if (!isGrounded)
         {
             velocity.y += gravity * Time.deltaTime;
         }
@@ -159,7 +161,7 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()          //이동 함수 제작
     {
-        if((isAttacking && !canMoveWhileAttacking) || isLanding)
+        if ((isAttacking && !canMoveWhileAttacking) || isLanding)
         {
             currentSpeed = 0;
             return;
@@ -214,7 +216,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("isGrounded", isGrounded);
 
             bool isFalling = !isGrounded && velocity.y < -0.1f;                                  //캐릭터의 y 축 속도가 음수로 넘어가면 떨어지고 있다고 판단.
-            animator.SetBool("isFalling", isFalling);                           
+            animator.SetBool("isFalling", isFalling);
             animator.SetBool("isLanding", isLanding);
 
         }
